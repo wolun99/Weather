@@ -1,24 +1,20 @@
-# weather
+#Open Api를 이용한 Vue 기상정보 만들기
 
-## Project setup
-```
-npm install
-```
+##사용한 라이브러리
+*axios
+*vuex
+*vuex-persistedstate
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+###작업하면서 어려웠던점
+1.axios를 통해서 통신하고 새로고침을 하면 vuex를 통해 만든 store에 있는 state가 초기화되면서 받았던 데이터가 모두 사라지는 현상이 발생되어
+vuex-persistedstate라이브러리를 통해 localStorage에 데이터를 저장하는 방식으로 데이터의 사라지는 현상을 해결하였습니다.
 
-### Compiles and minifies for production
-```
-npm run build
-```
+2.하루단위로 1주일의 예보를 표현하려 하는데 Api에 담긴 자료가 UNIX타임이여서 이를 변환하여 사용하여야 하여서 검색을 통해 찾아본결과
+Javascript는 밀리초를 사용하고 UNIX타임은 초단위로 사용된다고 하기때문에 이를 계산하기위해 UNIX 타임에 1000을 곱한뒤 new Date()객체에 곱을한 값을 
+넣어서 날짜를 생성했습니다.
 
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+###추후에 적용해야 하는점
+1.api키 정보가 보이기 때문에 이를 안보이게 수정해야 한다.
+2.다른 도시의 날씨정보를 보기위해 input에 도시의 이름을 작성하고 이를 바탕으로 값이 변경되었는데 새로고침이 되지않아
+이를 수정해야합니다.
+3.도시의 이름이 변경된 값을 초기화 시키는 작업을 해야합니다.

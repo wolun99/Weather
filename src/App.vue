@@ -1,26 +1,46 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div class="wrap">
+    <Simple :simple="$store.state.simpleWeather" />
+    <div class="today">
+      <h4>Today</h4>
+      <Today :daily="$store.state.hourWeather.daily['0']" :num="i" v-for="(today, i) in 4" :key="i" />
+    </div>
+    <div class="weekend">
+      <h4>1주일 예보</h4>
+      <div>
+        <Weekend :week="$store.state.hourWeather.daily[i]" v-for="(week, i) in 7" :key="i" />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+
+import Simple from './components/simple.vue'
+import Today from './components/Today.vue'
+import Weekend from './components/Weekend.vue'
 
 export default {
+  namespaced: true,
   name: 'App',
+  date() {
+    return {
+
+    }
+  },
   components: {
-    HelloWorld
-  }
+    Simple: Simple,
+    Today: Today,
+    Weekend: Weekend,
+  },
+  beforeCreate() {
+    this.$store.dispatch('getSimpleData');
+    this.$store.dispatch('getHourData');
+  },
+
 }
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+@import "./css/main.css"
 </style>

@@ -1,5 +1,7 @@
 import { createApp } from 'vue'
 import App from './App.vue'
-import store from './js/store.js'
+import VueRouter from 'vue-router'
 
-createApp(App).use(store).mount('#app')
+// import { simpleWeather, getHourData } from './js/api.js'
+
+createApp(App).use(VueRouter).mount('#app')

@@ -1,31 +1,39 @@
 <template>
   <div class="wrap">
-    <Simple :simple="$store.state.simpleWeather" />
+    <Simple :simple="simple" @search="city = $event" />
     <div class="today">
       <h4>Today</h4>
-      <Today :daily="$store.state.hourWeather.daily['0']" :num="i" v-for="(today, i) in 4" :key="i" />
+      <Today :daily="hour.daily[0]" :num="i" v-for="(today, i) in 4" :key="i" />
     </div>
     <div class="weekend">
       <h4>1주일 예보</h4>
       <div>
-        <Weekend :week="$store.state.hourWeather.daily[i]" v-for="(week, i) in 7" :key="i" />
+        <Weekend :week="hour.daily[i]" v-for="(week, i) in 7" :key="i" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
 
 import Simple from './components/simple.vue'
 import Today from './components/Today.vue'
 import Weekend from './components/Weekend.vue'
 
+
 export default {
   namespaced: true,
   name: 'App',
-  date() {
+  data() {
     return {
-
+      simple: {},
+      hour: {},
+      lat: '',
+      lon: '',
+      city: 'Seoul',
+      cityOri: 'Seoul',
+      hourDaily: {}
     }
   },
   components: {
@@ -33,10 +41,34 @@ export default {
     Today: Today,
     Weekend: Weekend,
   },
-  beforeCreate() {
-    this.$store.dispatch('getSimpleData');
-    this.$store.dispatch('getHourData');
+  methods: {
+    getSimpleData() {
+      axios.get(`https://api.openweathermap.org/data/2.5/weather?q=${this.city}&appid=3ae11a97f077e8d4aaef302a26ea2cdb&lang=kr`)
+        .then((result) => {
+          this.simple = result.data
+          this.lat = result.data.coord.lat
+          this.lon = result.data.coord.lon
+          this.getHourWeather();
+        })
+    },
+    getHourWeather() {
+      axios.get(`https://api.openweathermap.org/data/2.5/onecall?lat=${this.lat}&lon=${this.lon}&exclude=hourly&appid=3ae11a97f077e8d4aaef302a26ea2cdb`)
+        .then((result) => {
+          this.hour = result.data
+          this.hourDaily = result.data.daily[0]
+        })
+    }
   },
+  watch: {
+    city() {
+      this.getSimpleData()
+    }
+  },
+  created() {
+    this.getSimpleData()
+  },
+
+
 
 }
 </script>

@@ -11,9 +11,10 @@
     <p class="sensible">{{ parseFloat(simple.main.feels_like - 273.15).toFixed(1) }}°C</p>
     <p class="week_date">{{ dayName[day] }}</p>
     <div>
-      <input type="text" placeholder="영문으로 적어주세요" @input="getInput">
-      <button @click="$store.commit('getCityName', value)">검색</button>
+      <input type="text" placeholder="영문으로 적어주세요" v-model="citys">
+      <button @click="$emit('search', citys)">검색</button>
     </div>
+
   </div>
 </template>
 
@@ -24,6 +25,7 @@ export default {
     return {
       day: '',
       value: '',
+      citys: '',
       dayName: ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일',],
     }
   },
@@ -36,13 +38,10 @@ export default {
     getDay() {
       this.day = new Date(this.simple.dt * 1000).getDay()
     },
-    getInput(e) {
-      this.value = e.target.value;
-    }
   },
   created() {
     this.getDay();
-  }
+  },
 }
 </script>
 
